@@ -44,7 +44,6 @@ log.basicConfig(format='[ %(levelname)s ] %(message)s', level=log.DEBUG, stream=
 
 DEVICE_KINDS = ['CPU', 'GPU', 'MYRIAD', 'HETERO', 'HDDL']
 
-
 def build_argparser():
     parser = ArgumentParser()
 
@@ -111,8 +110,7 @@ def build_argparser():
                             'for face identification.')
     infer.add_argument('-exp_r_fd', metavar='NUMBER', type=float, default=1.15,
                        help='Optional. Scaling ratio for bboxes passed to face recognition.')
-    return parser
-
+    return
 
 class FrameProcessor:
     QUEUE_SIZE = 16
@@ -158,8 +156,8 @@ class FrameProcessor:
             for i in unknowns:
                 # This check is preventing asking to save half-images in the boundary of images
                 if rois[i].position[0] == 0.0 or rois[i].position[1] == 0.0 or \
-                    (rois[i].position[0] + rois[i].size[0] > orig_image.shape[1]) or \
-                    (rois[i].position[1] + rois[i].size[1] > orig_image.shape[0]):
+                        (rois[i].position[0] + rois[i].size[0] > orig_image.shape[1]) or \
+                        (rois[i].position[1] + rois[i].size[1] > orig_image.shape[0]):
                     continue
                 crop_image = crop(orig_image, rois[i])
                 name = self.faces_database.ask_to_save(crop_image)
@@ -195,12 +193,14 @@ def draw_detections(frame, frame_processor, detections, output_transform):
 
     return frame
 
+
 def center_crop(frame, crop_size):
     fh, fw, _ = frame.shape
     crop_size[0], crop_size[1] = min(fw, crop_size[0]), min(fh, crop_size[1])
-    return frame[(fh - crop_size[1]) // 2 : (fh + crop_size[1]) // 2,
-                 (fw - crop_size[0]) // 2 : (fw + crop_size[0]) // 2,
-                 :]
+    return frame[(fh - crop_size[1]) // 2: (fh + crop_size[1]) // 2,
+           (fw - crop_size[0]) // 2: (fw + crop_size[0]) // 2,
+           :]
+
 
 def main():
     args = build_argparser().parse_args()
@@ -264,3 +264,134 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main() or 0)
+
+# python ./face_recognition_demo.py -i head-pose-face-detection-male.mp4 -m_fd  -m_lm intel/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009.xml -m_reid intel/face-reidentification-retail-0095/FP16/face-reidentification-retail-0095.xml --verbose
+
+
+# Get user input
+# Define default input
+# Configure app.
+
+
+# Know more about all arguments
+def app_config():
+
+    # General variables list #-----------------------------------------------------------------------------------------#
+
+    # Required: True
+    # Help: An input to process. The input must be a single image,a folder of images, video file or camera id.
+    input = ""
+
+    # Default: False
+    # Action='store_true'
+    # Help: optional. Enable reading the input in a loop
+    loop = False
+
+    # Help: Optional. Name of the output file(s) to save.
+    output = ''
+
+    # Type: int
+    # Default: 1000
+    # Help: Optional. Number of frames to store in output.If 0 is set, all frames are stored.
+    output_limit = 1000
+
+    # Type: resolution
+    # Default: 1000
+    # Help: Optional. Specify the maximum output window resolution in (width x height) format. Example: 1280x720.
+    # Input frame size used by default.
+    output_resolution = None
+
+    # Action='store_true'
+    # Help: Optional. Don't show output.
+    no_show = None
+
+    # Type: int
+    # Default: (0, 0)
+    # Help: Optional. Crop the input stream to this resolution.
+    crop_size = (0, 0)
+
+    # Default: 'HUNGARIAN'
+    # Choices: ('HUNGARIAN', 'MIN_DIST')
+    # Help: Optional. Algorithm for face matching. Default: HUNGARIAN.
+    match_algo = 'HUNGARIAN'
+
+    # Type: str
+    # Default: ''
+    # Help: Optional. List of monitors to show initially.
+    utilization_monitors = ''
+
+    # Faces database variables list #----------------------------------------------------------------------------------#
+
+    # Default: ''
+    # Help: Optional. Path to the face images directory.
+    fg = ''
+
+    # Action: 'store_true'
+    # Help: Optional. Use Face Detection model to find faces on the face images, otherwise use full-images.
+    run_detector = None
+
+    # Action: 'store_true'
+    # Help: Optional. Allow to grow faces gallery and to dump on disk. Available only if --no_show option is off.
+    allow_grow = None
+
+    # Models variables list #------------------------------------------------------------------------------------------#
+
+    # Type: Path
+    # Required: true
+    # Help: Required. Path to an .xml file with Face Detection model.
+    m_fd = ''
+
+    # Type: Path
+    # Required: true
+    # Help: Required. Path to an .xml file with Facial Landmarks Detection model.
+    m_lm = ''
+
+    # Type: Path
+    # Required: true
+    # Help: Required. Path to an .xml file with Face Reidentification model.
+    m_reid = ''
+
+    # Type: int
+    # Default: (0, 0)
+    # Required: true
+    # Help: Optional. Specify the input size of detection model for reshaping. Example: 500 700.
+    fd_input_size = (0, 0)
+
+    # Inference options variables list #-------------------------------------------------------------------------------#
+
+    # Default: 'CPU'
+    # Choices: DEVICE_KINDS
+    # Help: Optional. Target device for Face Detection model. Default value is CPU.
+    d_fd = 'CPU'
+
+    # Default: 'CPU'
+    # Choices: DEVICE_KINDS
+    # Help: Optional. Target device for Facial Landmarks Detection model. Default value is CPU.
+    d_lm = 'CPU'
+
+    # Default: 'CPU'
+    # Choices: DEVICE_KINDS
+    # Help: Optional. Target device for Face Reidentification model. Default value is CPU.
+    d_reid = 'CPU'
+
+    # Action: 'store_true'
+    # Help: Optional. Be more verbose.
+    verbose = None
+
+    # Type: float
+    # Range: 0.0 - 1.0
+    # Default: 0.6
+    # Help: Optional. Probability threshold for face detections.
+    t_fd = 0.6
+
+    # Type: float
+    # Range: 0.0 - 1.0
+    # Default: 0.3
+    # Help: Optional. Cosine distance threshold between two vectors for face identification.
+    t_id = 0.3
+
+    # Type: float
+    # Default: 1.15
+    # Help: Optional. Scaling ratio for bboxes passed to face recognition.
+    exp_r_fd = 1.15
+
