@@ -19,6 +19,14 @@ app.config['ALLOWED_EXTENSIONS'] = ['.mp4']
 input_video_file_name = ''
 
 
+# Create directory
+try:
+    os.makedirs(app.config['UPLOAD_DIRECTORY'])
+    os.makedirs(app.config['THUMBNAILS_DIRECTORY'])
+except OSError:
+    print("Error on create directory")
+
+
 @app.route('/')
 def index():
     files = os.listdir(app.config['UPLOAD_DIRECTORY'])
