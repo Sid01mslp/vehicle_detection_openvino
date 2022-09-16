@@ -20,9 +20,13 @@
     </div>
 
     <div class="images-section">
-      <img src="{{ url_for('video_feed') }}" width="50%"/>
+      {% for image in images %}
+        <a href="{{ url_for('object_detection', filename=image) }}" target="_blank">
+          <img src="{{ url_for('thumbnail', filename=image) }}"/>
+        </a>
+      {% endfor %}
     </div>
-
+    
   </div>
 </body>
 </html>
