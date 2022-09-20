@@ -4,8 +4,10 @@ from werkzeug.utils import secure_filename
 import os
 import cv2
 
-from face_recognition.frame_processor import FrameProcessor
+# from face_recognition.frame_processor import FrameProcessor
 from face_recognition.draw_detections import draw_detections
+
+from vehicle_detection.detect_vehicle import detect_vehicle
 
 from openvino.model_zoo.model_api.models import OutputTransform
 
@@ -85,12 +87,12 @@ def object_detection(filename):
     return render_template('video_player.html',)
 
 
-def generate_frames(frame_processor, vidcap):
+def generate_face_detection_frames(frame_processor, video_capture):
     output_resolution = None
     frame_num = 0
     while True:
         # frame = cap.read()
-        success, frame = vidcap.read()
+        success, frame = video_capture.read()
 
         if frame is None:
             if frame_num == 0:
@@ -117,18 +119,21 @@ def generate_frames(frame_processor, vidcap):
 
 @app.route('/video_feed')
 def video_feed():
-    frame_processor = FrameProcessor()
+    # frame_processor = FrameProcessor()
 
-    video_cap = cv2.VideoCapture(os.path.join(
+    video_capture = cv2.VideoCapture(os.path.join(
         app.config['UPLOAD_DIRECTORY'],
         secure_filename(input_video_file_name)
     ))
 
+    # return Response(
+    #     generate_face_detection_frames(
+    #         frame_processor,
+    #         video_capture
+    #     ), mimetype='multipart/x-mixed-replace; boundary=frame')
+
     return Response(
-        generate_frames(
-            frame_processor,
-            video_cap
-        ), mimetype='multipart/x-mixed-replace; boundary=frame')
+        detect_vehicle(video_capture), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":
