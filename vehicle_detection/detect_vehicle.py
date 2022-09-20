@@ -92,46 +92,37 @@ configuration = {
 
 model = DetectionModel.create_model(architecture_type, model_adapter, configuration)
 
-model.log_layers_info()
-
 detector_pipeline = AsyncPipeline(model)
 
-palette = ColorPalette(len(model.labels) if model.labels else 100)
 
+def detect_vehicle(video_captured_frame):
+    global model, output_resolution
 
-def detect_vehicle(video_capture):
+    palette = ColorPalette(len(model.labels) if model.labels else 100)
 
-    global output_resolution
     next_frame_id = 0
     next_frame_id_to_show = 0
+    output_transform = None
 
     while True:
 
         if detector_pipeline.callback_exceptions:
             raise detector_pipeline.callback_exceptions[0]
 
-        # Process all completed requests
         results = detector_pipeline.get_result(next_frame_id_to_show)
 
         if results:
             objects, frame_meta = results
             frame = frame_meta['frame']
-
             frame = draw_detections(frame, objects, palette, model.labels, output_transform)
 
             if not no_show:
-                # cv2.imshow('Detection Results', frame)
-                ret, buffer = cv2.imencode('.jpg', frame)
-                frame = buffer.tobytes()
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                return frame
 
             continue
 
         if detector_pipeline.is_ready():
-            # Get new image/frame
-
-            success, frame = video_capture.read()
+            frame = video_captured_frame
 
             if frame is None:
                 if next_frame_id == 0:
@@ -149,26 +140,7 @@ def detect_vehicle(video_capture):
             detector_pipeline.submit_data(frame, next_frame_id, {'frame': frame})
             next_frame_id += 1
         else:
-            # Wait for empty request
             detector_pipeline.await_any()
 
-    detector_pipeline.await_all()
-    if detector_pipeline.callback_exceptions:
-        raise detector_pipeline.callback_exceptions[0]
-
-    # Process completed requests
-    for next_frame_id_to_show in range(next_frame_id_to_show, next_frame_id):
-        results = detector_pipeline.get_result(next_frame_id_to_show)
-        objects, frame_meta = results
-        frame = frame_meta['frame']
-
-        frame = draw_detections(frame, objects, palette, model.labels, output_transform)
-
-        if not no_show:
-            # cv2.imshow('Detection Results', frame)
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 

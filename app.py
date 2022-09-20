@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 import cv2
 
-# from face_recognition.frame_processor import FrameProcessor
+from face_recognition.frame_processor import FrameProcessor
 from face_recognition.draw_detections import draw_detections
 
 from vehicle_detection.detect_vehicle import detect_vehicle
@@ -117,23 +117,43 @@ def generate_face_detection_frames(frame_processor, video_capture):
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
+def generate_vehicle_detection_frames(video_capture):
+
+    while True:
+        success, frame = video_capture.read()
+
+        frame = detect_vehicle(frame)
+
+        print("Frame Received")
+
+        if not False:
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
 @app.route('/video_feed')
 def video_feed():
-    # frame_processor = FrameProcessor()
+    frame_processor = FrameProcessor()
 
     video_capture = cv2.VideoCapture(os.path.join(
         app.config['UPLOAD_DIRECTORY'],
         secure_filename(input_video_file_name)
     ))
 
-    # return Response(
-    #     generate_face_detection_frames(
-    #         frame_processor,
-    #         video_capture
-    #     ), mimetype='multipart/x-mixed-replace; boundary=frame')
+    face_detection = False
 
-    return Response(
-        detect_vehicle(video_capture), mimetype='multipart/x-mixed-replace; boundary=frame')
+    if face_detection:
+        return Response(
+            generate_face_detection_frames(
+                frame_processor,
+                video_capture
+            ), mimetype='multipart/x-mixed-replace; boundary=frame')
+    else:
+        return Response(
+            generate_vehicle_detection_frames(video_capture),
+            mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":
