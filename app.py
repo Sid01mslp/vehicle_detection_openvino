@@ -8,9 +8,10 @@ from face_recognition.frame_processor import FrameProcessor
 from face_recognition.draw_detections import draw_detections
 
 from vehicle_detection.detect_vehicle import detect_vehicle
+from vehicle_detection.detect_vehicle import detector_pipeline
 
 from openvino.model_zoo.model_api.models import OutputTransform
-
+from images_capture import open_images_capture
 
 app = Flask(__name__)
 app.config['UPLOAD_DIRECTORY'] = 'static/uploads/'
@@ -19,7 +20,6 @@ app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 16MB
 app.config['ALLOWED_EXTENSIONS'] = ['.mp4']
 
 input_video_file_name = ''
-
 
 # Create directory
 try:
@@ -84,7 +84,7 @@ def thumbnail(filename):
 def object_detection(filename):
     global input_video_file_name
     input_video_file_name = filename
-    return render_template('video_player.html',)
+    return render_template('video_player.html', )
 
 
 def generate_face_detection_frames(frame_processor, video_capture):
@@ -117,20 +117,9 @@ def generate_face_detection_frames(frame_processor, video_capture):
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
-def generate_vehicle_detection_frames(video_capture):
-
-    while True:
-        success, frame = video_capture.read()
-
-        frame = detect_vehicle(frame)
-
-        print("Frame Received")
-
-        if not False:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+def generate_vehicle_detection_frames(file_name):
+    cap = open_images_capture(file_name, False)
+    return detect_vehicle(cap)
 
 
 @app.route('/video_feed')
@@ -152,7 +141,10 @@ def video_feed():
             ), mimetype='multipart/x-mixed-replace; boundary=frame')
     else:
         return Response(
-            generate_vehicle_detection_frames(video_capture),
+            generate_vehicle_detection_frames(os.path.join(
+                app.config['UPLOAD_DIRECTORY'],
+                secure_filename(input_video_file_name)
+            )),
             mimetype='multipart/x-mixed-replace; boundary=frame')
 
 

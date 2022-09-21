@@ -94,41 +94,44 @@ model = DetectionModel.create_model(architecture_type, model_adapter, configurat
 
 detector_pipeline = AsyncPipeline(model)
 
+palette = ColorPalette(len(model.labels) if model.labels else 100)
 
-def detect_vehicle(video_captured_frame):
+
+def detect_vehicle(cap):
     global model, output_resolution
-
-    palette = ColorPalette(len(model.labels) if model.labels else 100)
+    output_transform = None
 
     next_frame_id = 0
     next_frame_id_to_show = 0
-    output_transform = None
 
     while True:
-
         if detector_pipeline.callback_exceptions:
             raise detector_pipeline.callback_exceptions[0]
-
+        # Process all completed requests
         results = detector_pipeline.get_result(next_frame_id_to_show)
-
         if results:
             objects, frame_meta = results
             frame = frame_meta['frame']
+
             frame = draw_detections(frame, objects, palette, model.labels, output_transform)
 
-            if not no_show:
-                return frame
+            next_frame_id_to_show += 1
 
-            continue
+            # cv2.imshow('Detection Results', frame)
+
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+            # continue
 
         if detector_pipeline.is_ready():
-            frame = video_captured_frame
-
+            frame = cap.read()
             if frame is None:
                 if next_frame_id == 0:
                     raise ValueError("Can't read an image from the input")
                 break
-
             if next_frame_id == 0:
                 output_transform = OutputTransform(frame.shape[:2], output_resolution)
                 if output_resolution:
@@ -139,8 +142,7 @@ def detect_vehicle(video_captured_frame):
             # Submit for inference
             detector_pipeline.submit_data(frame, next_frame_id, {'frame': frame})
             next_frame_id += 1
-        else:
-            detector_pipeline.await_any()
+
 
 
 

@@ -5,6 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b6a4f42-a480-46dc-9f42-f403f2fe4d96" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/images_capture.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/monitors_extension/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/monitors_extension/monitors_extension.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vehicle_detection/detect_vehicle.py" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle_detection/detect_vehicle.py" afterDir="false" />
@@ -32,12 +36,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "D:/PythonProjects/FlaskProjects/vehicle_detection_openvino"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\PythonProjects\FlaskProjects\vehicle_detection_openvino" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="OpenVinoVehicleDitection" />
@@ -69,7 +79,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="78fc2784-1c6f-4e5c-9003-23bbb3fa26df" name="Changes" comment="" />
+      <changelist id="3b6a4f42-a480-46dc-9f42-f403f2fe4d96" name="Changes" comment="" />
       <created>1663570827756</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -87,16 +97,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/vehicle_detection/detect_vehicle.py</url>
-          <line>173</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
