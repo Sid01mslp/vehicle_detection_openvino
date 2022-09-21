@@ -5,6 +5,11 @@ from openvino.model_zoo.model_api.models import DetectionWithLandmarks
 
 def draw_detections(frame, detections, palette, labels, output_transform):
     frame = output_transform.resize(frame)
+
+    print("--------------------------")
+    print(len(detections))
+    print("--------------------------")
+
     for detection in detections:
         class_id = int(detection.id)
         color = palette[class_id]
