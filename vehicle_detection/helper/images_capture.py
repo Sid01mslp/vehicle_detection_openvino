@@ -23,13 +23,13 @@ class OpenError(Exception):
 
 class ImagesCapture:
 
-    def read():
+    def read(self):
         raise NotImplementedError
 
-    def fps():
+    def fps(self):
         raise NotImplementedError
 
-    def get_type():
+    def get_type(self):
         raise NotImplementedError
 
 

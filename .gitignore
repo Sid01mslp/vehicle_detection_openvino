@@ -83,5 +83,5 @@ coverage.xml
 # Ignore all the content of static/thumbnails & static/uploads/
 static/thumbnails/*
 static/uploads/*
-.idea/
+.idea
 # End of https://www.gitignore.io/api/python,osx

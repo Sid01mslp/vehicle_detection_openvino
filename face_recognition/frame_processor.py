@@ -1,3 +1,9 @@
+from face_recognition.helper.utils import crop
+from face_recognition.helper.landmarks_detector import LandmarksDetector
+from face_recognition.helper.face_detector import FaceDetector
+from face_recognition.helper.faces_database import FacesDatabase
+from face_recognition.helper.face_identifier import FaceIdentifier
+
 import logging as log
 import sys
 from pathlib import Path
@@ -5,11 +11,6 @@ from openvino.runtime import Core
 
 sys.path.append(str(Path(__file__).resolve().parents[2] / 'common/python'))
 
-from face_recognition.helper.utils import crop
-from face_recognition.helper.landmarks_detector import LandmarksDetector
-from face_recognition.helper.face_detector import FaceDetector
-from face_recognition.helper.faces_database import FacesDatabase
-from face_recognition.helper.face_identifier import FaceIdentifier
 
 no_show = None
 

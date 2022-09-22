@@ -5,7 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b6a4f42-a480-46dc-9f42-f403f2fe4d96" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/vehicle_detection/draw_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle_detection/draw_detection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vehicle_detection/config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vehicle_detection/detector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/face_recognition/frame_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition/frame_processor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images_capture.py" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle_detection/helper/images_capture.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitors_extension/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitors_extension/monitors_extension.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vehicle_detection/detect_vehicle.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,12 +43,16 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/PythonProjects/FlaskProjects/vehicle_detection_openvino"
+    "last_opened_file_path": "D:/PythonProjects/FlaskProjects/vehicle_detection_openvino/vehicle_detection"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\PythonProjects\FlaskProjects\vehicle_detection_openvino\vehicle_detection" />
       <recent name="D:\PythonProjects\FlaskProjects\vehicle_detection_openvino" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\PythonProjects\FlaskProjects\vehicle_detection_openvino\vehicle_detection\helper" />
     </key>
   </component>
   <component name="RunManager">

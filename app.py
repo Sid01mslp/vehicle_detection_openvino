@@ -4,14 +4,16 @@ from werkzeug.utils import secure_filename
 import os
 import cv2
 
+# face_recognition
 from face_recognition.frame_processor import FrameProcessor
 from face_recognition.draw_detections import draw_detections
 
-from vehicle_detection.detect_vehicle import detect_vehicle
-from vehicle_detection.detect_vehicle import detector_pipeline
+# vehicle_detection
+from vehicle_detection.config import Configuration
+from vehicle_detection.detector import detect
 
 from openvino.model_zoo.model_api.models import OutputTransform
-from images_capture import open_images_capture
+from vehicle_detection.helper.images_capture import open_images_capture
 
 app = Flask(__name__)
 app.config['UPLOAD_DIRECTORY'] = 'static/uploads/'
@@ -88,6 +90,7 @@ def object_detection(filename):
 
 
 def generate_face_detection_frames(frame_processor, video_capture):
+    output_transform = None
     output_resolution = None
     frame_num = 0
     while True:
@@ -117,35 +120,27 @@ def generate_face_detection_frames(frame_processor, video_capture):
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
-def generate_vehicle_detection_frames(file_name):
-    cap = open_images_capture(file_name, False)
-    return detect_vehicle(cap)
+def generate_vehicle_detection_frames(file_name, config):
+    capture = open_images_capture(file_name, False)
+    return detect(capture=capture, model=config.model, palette=config.palette, pipeline=config.detector_pipeline)
 
 
 @app.route('/video_feed')
 def video_feed():
-    frame_processor = FrameProcessor()
+    filename = os.path.join(app.config['UPLOAD_DIRECTORY'], secure_filename(input_video_file_name))
 
-    video_capture = cv2.VideoCapture(os.path.join(
-        app.config['UPLOAD_DIRECTORY'],
-        secure_filename(input_video_file_name)
-    ))
-
+    # detector type
     face_detection = False
 
     if face_detection:
-        return Response(
-            generate_face_detection_frames(
-                frame_processor,
-                video_capture
-            ), mimetype='multipart/x-mixed-replace; boundary=frame')
+        frame_processor = FrameProcessor()
+        video_capture = cv2.VideoCapture(filename)
+        method = generate_face_detection_frames(frame_processor, video_capture)
     else:
-        return Response(
-            generate_vehicle_detection_frames(os.path.join(
-                app.config['UPLOAD_DIRECTORY'],
-                secure_filename(input_video_file_name)
-            )),
-            mimetype='multipart/x-mixed-replace; boundary=frame')
+        config = Configuration()
+        method = generate_vehicle_detection_frames(filename, config)
+
+    return Response(method, mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":
